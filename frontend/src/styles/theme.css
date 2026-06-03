@@ -1,0 +1,109 @@
+html {
+    font-family: "Geist Variable", sans-serif;
+}
+
+:root {
+    --brand: #2b3a33;
+    --brand-soft: #3d5248;
+    --brand-hero: #3fa66b;
+
+    --background: #f7f4ee;
+    --foreground: #1a1a1a;
+
+    --card: #ffffff;
+    --card-foreground: #1a1a1a;
+
+    --popover: #ffffff;
+    --popover-foreground: #1a1a1a;
+
+    --primary: #2b3a33;
+    --primary-foreground: #ffffff;
+
+    --secondary: #efede8;
+    --secondary-foreground: #1a1a1a;
+
+    --muted: #efede8;
+    --muted-foreground: #7a8580;
+
+    --accent: #d2691e;
+    --accent-foreground: #ffffff;
+
+    --border: #e0d8c9;
+    --input: #e0d8c9;
+
+    --ring: #3fa66b;
+
+    --radius: 16px;
+}
+
+.dark {
+    --background: #0e1511;
+    --foreground: #f5f2ec;
+
+    --card: #1c2821;
+    --card-foreground: #f5f2ec;
+
+    --popover: #1c2821;
+    --popover-foreground: #f5f2ec;
+
+    --primary: #6ba273;
+    --primary-foreground: #ffffff;
+
+    --secondary: #16201a;
+    --secondary-foreground: #f5f2ec;
+
+    --muted: #16201a;
+    --muted-foreground: #b8c0bb;
+
+    --accent: #e88a4a;
+    --accent-foreground: #ffffff;
+
+    --border: #2a3530;
+    --input: #2a3530;
+
+    --ring: #5bc487;
+}
+
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+
+    --color-border: var(--border);
+    --color-input: var(--input);
+
+    --color-ring: var(--ring);
+
+    --radius-sm: calc(var(--radius) - 8px);
+    --radius-md: calc(var(--radius) - 4px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 8px);
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+        min-height: 100vh;
+    }
+}
