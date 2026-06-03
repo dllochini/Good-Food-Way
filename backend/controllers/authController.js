@@ -8,7 +8,6 @@ export const register = async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
 
-
     const existingUser = await db
       .select()
       .from(users)
@@ -22,12 +21,18 @@ export const register = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await db.insert(users).values({
-      firstName,
-      lastName,
-      email,
-      password: hashedPassword,
-    });
+    // ✅ IMPORTANT: get inserted user back
+    const newUser = await db
+      .insert(users)
+      .values({
+        firstName,
+        lastName,
+        email,
+        password: hashedPassword,
+      })
+      .returning();
+
+    const user = newUser[0];
 
     const token = jwt.sign(
       {
@@ -40,7 +45,8 @@ export const register = async (req, res) => {
         expiresIn: "7d",
       }
     );
-res.status(201).json({
+
+    return res.status(201).json({
       message: "User registered successfully",
       token,
       user: {
@@ -51,10 +57,11 @@ res.status(201).json({
         role: user.role,
       },
     });
+
   } catch (error) {
     console.error(error);
 
-    res.status(500).json({
+    return res.status(500).json({
       message: "Registration failed",
     });
   }
