@@ -1,42 +1,56 @@
-import { Routes, Route } from "react-router-dom";
+import { Navigate, Routes, Route } from "react-router-dom";
 
-import LandingPage from "../pages/LandingPage";
-import Login from "../pages/Login";
-import Registration from "../pages/Registration";
-// import Dashboard from "../pages/Dashboard";
-import Welcome from "../pages/onboarding/Welcome";
+import LandingPage from "../pages/auth/LandingPage";
+import Login from "../pages/auth/Login";
 
 import ProtectedRoute from "../components/ProtectedRoute";
-import Personal from "../pages/onboarding/Personal";
-import HealthGoals from "@/pages/onboarding/HealthGoals";
-import DietaryPreferences from "@/pages/onboarding/DietaryPreference";
-import AllergiesAndDislikes from "@/pages/onboarding/AllergiesAndDislikes";
-import AllSet from "@/pages/onboarding/AllSet";
-import ChoosePlan from "@/pages/ChoosePlan";
-import PaymentPortal from "@/pages/PaymentPortal";
+
+import PaymentPortal from "../pages/PaymentPortal";
+import Dashboard from "../pages/Dashboard";
+import MealsPage from "../pages/meals/MealsPage";
+import TrackPage from "../pages/trackpge/TrackPage";
+import ReportsPage from "../pages/ReportsPage";
+import ConsultPage from "../pages/ConsultPage";
+import ProfilePage from "../pages/ProfilePage";
+import MealTrackPage from "../pages/meals/MealTrackPage";
+import MealDetailPage from "../pages/meals/MealDetailPage";
+
+import SignupPage from "@/pages/auth/Signup";
+import GoalPage from "@/pages/onboarding/GoalPage";
+import AboutYouPage from "@/pages/onboarding/AboutYouPage";
+import DietaryPage from "@/pages/onboarding/DietaryPage";
+import ReportPage from "@/pages/onboarding/ReportPage";
+import ChoosePlan from "@/pages/onboarding/ChoosePlan";
 
 const AppRouter = () => {
   return (
     <Routes>
-      {/* Public Routes */}
+      <Route path="/" element={<Navigate to="/landingpage" replace />} />
+
       <Route path="/landingpage" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Registration />} />
+      <Route path="/register" element={<SignupPage />} />
+      <Route path="/signup" element={<Navigate to="/register" replace />} />
 
-        <Route path="/onboarding/page1" element={<Welcome />} />
-        <Route path="/onboarding/page2" element={<Personal />} />
-        <Route path="/onboarding/page3" element={<HealthGoals />} />
-        <Route path="/onboarding/page4" element={<DietaryPreferences />} />
-        <Route path="/onboarding/page5" element={<AllergiesAndDislikes />} />
-        <Route path="/onboarding/page6" element={<AllSet />} />
-        <Route path="/chooseplan" element={<ChoosePlan />} />
+      <Route path="/onboarding/goal" element={<GoalPage />} />
+      <Route path="/onboarding/about" element={<AboutYouPage />} />
+      <Route path="/onboarding/dietary" element={<DietaryPage />} />
+      <Route path="/onboarding/report" element={<ReportPage />} />
+      <Route path="/chooseplan" element={<ChoosePlan />} />
 
-        <Route path="/paymentportal" element={<PaymentPortal />} />
-        
-      {/* Protected Routes */}
+      <Route path="/meals" element={<MealsPage />} />
+      <Route path="/track" element={<TrackPage />} />
+      <Route path="/reports" element={<ReportsPage />} />
+      <Route path="/consult" element={<ConsultPage />} />
+      <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/mealtrack" element={<MealTrackPage />} />
+      <Route path="/mealdetail" element={<MealDetailPage />} />
+
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/paymentportal" element={<PaymentPortal />} />
+
       <Route element={<ProtectedRoute />}>
-
-
+        {/* put protected routes here later if needed */}
       </Route>
     </Routes>
   );

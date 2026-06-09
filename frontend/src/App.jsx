@@ -1,12 +1,8 @@
-import { useState } from 'react'
-import './App.css'
-import Login from './pages/Login'
-import AppRouter from './routes/AppRouter'
+import "./App.css";
+import AppRouter from "./routes/AppRouter";
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return <AppRouter/>
+  return <AppRouter />;
 }
 
-export default App
+export default App;
