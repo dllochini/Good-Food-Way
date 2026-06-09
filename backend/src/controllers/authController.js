@@ -1,19 +1,16 @@
 import bcrypt from "bcryptjs";
-import { db } from "../config/db.js";
-import { users } from "../schema/users.js";
-import { eq } from "drizzle-orm";
 import jwt from "jsonwebtoken";
 
+import * as authRepo from "../repositories/auth.js";
+
+// REGISTER
 export const register = async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
 
-    const existingUser = await db
-      .select()
-      .from(users)
-      .where(eq(users.email, email));
+    const existingUser = await authRepo.findUserByEmail(email);
 
-    if (existingUser.length > 0) {
+    if (existingUser) {
       return res.status(400).json({
         message: "User already exists",
       });
@@ -21,18 +18,12 @@ export const register = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // ✅ IMPORTANT: get inserted user back
-    const newUser = await db
-      .insert(users)
-      .values({
-        firstName,
-        lastName,
-        email,
-        password: hashedPassword,
-      })
-      .returning();
-
-    const user = newUser[0];
+    const user = await authRepo.createUser({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+    });
 
     const token = jwt.sign(
       {
@@ -41,9 +32,7 @@ export const register = async (req, res) => {
         role: user.role,
       },
       process.env.JWT_SECRET,
-      {
-        expiresIn: "7d",
-      }
+      { expiresIn: "7d" }
     );
 
     return res.status(201).json({
@@ -60,35 +49,26 @@ export const register = async (req, res) => {
 
   } catch (error) {
     console.error(error);
-
-    return res.status(500).json({
-      message: "Registration failed",
-    });
+    return res.status(500).json({ message: "Registration failed" });
   }
 };
 
+
+
+// LOGIN
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Check if user exists
-    const existingUser = await db
-      .select()
-      .from(users)
-      .where(eq(users.email, email));
+    const user = await authRepo.findUserByEmail(email);
 
-    if (existingUser.length === 0) {
+    if (!user) {
       return res.status(400).json({
         message: "Invalid credentials",
       });
     }
 
-    const user = existingUser[0];
-
-    const isMatch = await bcrypt.compare(
-      password,
-      user.password
-    );
+    const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
       return res.status(400).json({
@@ -103,12 +83,10 @@ export const login = async (req, res) => {
         role: user.role,
       },
       process.env.JWT_SECRET,
-      {
-        expiresIn: "7d",
-      }
+      { expiresIn: "7d" }
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "Login successful",
       token,
       user: {
@@ -119,11 +97,9 @@ export const login = async (req, res) => {
         role: user.role,
       },
     });
+
   } catch (error) {
     console.error(error);
-
-    res.status(500).json({
-      message: "Login failed",
-    });
+    return res.status(500).json({ message: "Login failed" });
   }
 };

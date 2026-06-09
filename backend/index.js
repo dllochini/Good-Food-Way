@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import authRoutes from "./routes/authRoutes.js";
+import authRoutes from "./src/routes/authRoutes.js";
+import onboardingRoutes from "./src/routes/onboardingRoutes.js";
 
 dotenv.config();
 
@@ -17,12 +18,13 @@ app.use(
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
+app.use("/api/onboarding", onboardingRoutes);
 
-app.get("/", (req, res) => {
-  res.json({
-    message: "API Running",
-  });
-});
+// app.get("/", (req, res) => {
+//   res.json({
+//     message: "API Running",
+//   });
+// });
 
 const PORT = process.env.PORT || 3000;
 

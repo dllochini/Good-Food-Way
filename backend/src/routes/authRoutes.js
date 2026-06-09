@@ -5,7 +5,7 @@ import { protect } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 router.post("/register", register);
-router.post('/login',login)
+router.post("/login", login);
 router.get("/me", protect, (req, res) => {
   res.json({
     user: req.user,
