@@ -1,98 +1,70 @@
-import {
-  HeartPulse,
-  Dumbbell,
-  Sparkles,
-  Salad,
-  ShieldCheck,
-  ArrowRight,
-} from "lucide-react";
+import { Dumbbell, HeartPulse, Leaf, Scale, Sparkles, Zap } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import OnboardingLayout from "@/components/layouts/OnboardingLayout";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import OnboardingLayout from "@/components/onboarding/OnboardingLayout";
-import OptionCard from "@/components/onboarding/OptionCard";
 
 export default function GoalPage() {
   const navigate = useNavigate();
-  const [goal, setGoal] = useState("");
+  const [selectedGoals, setSelectedGoals] = useState(["Lose weight"]);
 
   const goals = [
-    {
-      value: "healthy-habits",
-      title: "Build healthy habits",
-      description: "Small changes that feel realistic and sustainable.",
-      icon: Sparkles,
-    },
-    {
-      value: "better-energy",
-      title: "Feel more energetic",
-      description: "Choose meals that help you stay steady through the day.",
-      icon: HeartPulse,
-    },
-    {
-      value: "maintain",
-      title: "Maintain my weight",
-      description: "Stay balanced without strict or overwhelming rules.",
-      icon: ShieldCheck,
-    },
-    {
-      value: "strength",
-      title: "Build strength",
-      description: "Support training and an active routine.",
-      icon: Dumbbell,
-    },
-    {
-      value: "nutrition",
-      title: "Improve my nutrition",
-      description: "Learn what works best for your body over time.",
-      icon: Salad,
-    },
+    { label: "Lose weight", icon: Scale },
+    { label: "Gain muscle", icon: Dumbbell },
+    { label: "Maintain weight", icon: HeartPulse },
+    { label: "Improve fitness", icon: Zap },
+    { label: "Eat healthier", icon: Leaf },
+    { label: "Increase energy", icon: Sparkles },
+    { label: "Build healthier habits", icon: HeartPulse },
   ];
+
+  const toggleGoal = (goal) => {
+    setSelectedGoals((current) =>
+      current.includes(goal)
+        ? current.filter((item) => item !== goal)
+        : [...current, goal]
+    );
+  };
 
   return (
     <OnboardingLayout
-      step={2}
-      total={5}
-      title="What would you like support with?"
-      subtitle="Choose the goal that feels most relevant right now. You can update it anytime."
-      onBack={() => navigate("/register")}
+      step={1}
+      total={6}
+      title="What would you like to achieve?"
+      subtitle="Choose one or more goals you want to focus on."
     >
-      <div className="space-y-3">
-        {goals.map((item) => (
-          <OptionCard
-            key={item.value}
-            icon={item.icon}
-            title={item.title}
-            description={item.description}
-            selected={goal === item.value}
-            onClick={() => setGoal(item.value)}
-          />
-        ))}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        {goals.map((goal) => {
+          const Icon = goal.icon;
+          const selected = selectedGoals.includes(goal.label);
+
+          return (
+            <button
+              key={goal.label}
+              type="button"
+              onClick={() => toggleGoal(goal.label)}
+              className={`min-h-28 rounded-lg border p-4 text-left transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)] ${
+                selected
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-border bg-background hover:bg-muted/40"
+              }`}
+            >
+              <Icon className="h-5 w-5" />
+              <span className="mt-4 block text-base font-semibold leading-tight">
+                {goal.label}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
-      <Card className="mt-5 border-border/60 bg-muted/30 p-4 text-sm text-muted-foreground">
-        Pick one and we will shape the rest around it. You can always change this later.
-      </Card>
-
-      <div className="mt-6 flex gap-3">
-        <Button
-          variant="outline"
-          className="h-12 flex-1 rounded-lg"
-          onClick={() => navigate("/register")}
-        >
-          Back
-        </Button>
-
-        <Button
-          className="h-12 flex-1 rounded-lg"
-          disabled={!goal}
-          onClick={() => navigate("/onboarding/about")}
-        >
-          Continue <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
-      </div>
+      <Button
+        className="mt-6 h-12 w-full"
+        onClick={() => navigate("/onboarding/about")}
+      >
+        Continue
+      </Button>
     </OnboardingLayout>
   );
 }

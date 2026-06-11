@@ -1,57 +1,58 @@
-import { Lock, Mail, Salad } from "lucide-react";
+import { LogIn } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import AuthLayout from "@/components/AuthLayout";
+import AuthLayout from "@/components/layouts/AuthLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function Login() {
   const navigate = useNavigate();
 
   return (
     <AuthLayout
-      title="Welcome back"
-      subtitle="Sign in to continue tracking your meals, deliveries, and wellness streak."
+      title="Welcome Back!"
+      subtitle="Continue your health journey with Good Food Way."
+      showBack={false}
       footer={
         <p className="text-center text-sm text-muted-foreground">
           Don't have an account?{" "}
           <button
-            className="font-semibold text-primary hover:underline"
-            onClick={() => navigate("/register")}
             type="button"
+            onClick={() => navigate("/register")}
+            className="font-semibold text-primary hover:underline"
           >
-            Create account
+            Create One
           </button>
         </p>
       }
     >
-      <div className="mb-6 flex justify-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-primary/10 text-primary">
-          <Salad className="h-8 w-8" />
+      <form
+        className="space-y-4"
+        onSubmit={(event) => {
+          event.preventDefault();
+          navigate("/dashboard");
+        }}
+      >
+        <div className="space-y-2">
+          <Label htmlFor="loginEmail">Email</Label>
+          <Input id="loginEmail" type="email" autoComplete="email" />
         </div>
-      </div>
 
-      <div className="space-y-4">
-        <div className="relative">
-          <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input type="email" placeholder="Email address" className="h-12 pl-10" />
+        <div className="space-y-2">
+          <Label htmlFor="loginPassword">Password</Label>
+          <Input
+            id="loginPassword"
+            type="password"
+            autoComplete="current-password"
+          />
         </div>
 
-        <div className="relative">
-          <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input type="password" placeholder="Password" className="h-12 pl-10" />
-        </div>
-      </div>
-
-      <div className="mt-3 text-right">
-        <button className="text-sm font-medium text-primary hover:underline" type="button">
-          Forgot password?
-        </button>
-      </div>
-
-      <Button className="mt-5 h-12 w-full" onClick={() => navigate("/dashboard")}>
-        Sign in
-      </Button>
+        <Button className="h-12 w-full" type="submit">
+          <LogIn className="h-4 w-4" />
+          Login
+        </Button>
+      </form>
     </AuthLayout>
   );
 }

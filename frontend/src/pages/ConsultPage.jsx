@@ -1,85 +1,231 @@
-import { Bot, CalendarClock, MessageCircle, Video } from "lucide-react";
+import { useState } from "react";
 
-import BottomNav from "../components/BottomNav";
-import SectionTitle from "../components/SectionTitle";
-import { Button } from "@/components/ui/button";
+import PageHeader from "@/components/common/PageHeader";
+
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
+import {
+  CalendarDays,
+  Clock3,
+  Video,
+  UserRound,
+  CheckCircle2,
+} from "lucide-react";
+
 export default function ConsultPage() {
-  const options = [
-    {
-      icon: Bot,
-      title: "Dietitian chatbot",
-      desc: "Ask about allergies, meal swaps, macros, and daily goals.",
-      action: "Start chat",
-      primary: true,
-    },
-    {
-      icon: Video,
-      title: "30-minute video call",
-      desc: "Book a focused session to review goals, reports, and meal fit.",
-      action: "View sessions",
-    },
-    {
-      icon: MessageCircle,
-      title: "Delivery support",
-      desc: "Get help with timing, address changes, and account access.",
-      action: "Open support",
-    },
+  const [selectedType, setSelectedType] =
+    useState("followup");
+
+  const [selectedTime, setSelectedTime] =
+    useState("03:00 PM");
+
+  const slots = [
+    "09:00 AM",
+    "10:00 AM",
+    "11:00 AM",
+    "01:00 PM",
+    "03:00 PM",
+    "05:00 PM",
   ];
 
   return (
-    <main className="min-h-screen bg-background text-foreground pb-24">
-      <div className="mx-auto max-w-5xl px-4 py-6">
-        <div>
-          <h1 className="text-3xl font-bold">Consult</h1>
-          <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-            Get help from nutrition support, book a call, or resolve delivery questions.
-          </p>
+    <>
+      <PageHeader
+        title="Book Consultation"
+        subtitle="Schedule a session with your dietitian"
+      />
+
+      {/* Dietitian */}
+      <Card className="p-5">
+        <div className="flex gap-4">
+          <div className="h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center">
+            <UserRound className="h-7 w-7 text-primary" />
+          </div>
+
+          <div>
+            <h3 className="font-semibold">
+              Dr. Sarah Perera
+            </h3>
+
+            <p className="text-sm text-muted-foreground">
+              Registered Dietitian
+            </p>
+
+            <Badge className="mt-2">
+              Available This Week
+            </Badge>
+          </div>
+        </div>
+      </Card>
+
+      {/* Consultation Type */}
+      <Card className="p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <Video className="h-5 w-5 text-primary" />
+
+          <h2 className="font-semibold">
+            Consultation Type
+          </h2>
         </div>
 
-        <Card className="mt-6 p-5 brand-gradient text-primary-foreground">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <Badge className="h-7 rounded-lg bg-white/16 px-3 text-white ring-1 ring-white/20">
-                <CalendarClock className="h-3.5 w-3.5" />
-                Next available today
-              </Badge>
-              <h2 className="mt-3 text-2xl font-bold">Need a meal decision quickly?</h2>
-              <p className="mt-2 max-w-xl text-sm opacity-85">
-                Chat support is best for meal swaps and quick delivery questions.
-              </p>
+        <div className="space-y-3">
+          <button
+            onClick={() =>
+              setSelectedType("followup")
+            }
+            className={`w-full rounded-xl border p-4 text-left transition ${
+              selectedType === "followup"
+                ? "border-primary bg-primary/5"
+                : ""
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">
+                  Follow-up Session
+                </p>
+
+                <p className="text-sm text-muted-foreground">
+                  Review your progress and update your plan.
+                </p>
+              </div>
+
+              {selectedType ===
+                "followup" && (
+                <CheckCircle2 className="h-5 w-5 text-primary" />
+              )}
             </div>
-            <Button className="bg-white text-foreground hover:bg-white/90">Start chat</Button>
-          </div>
-        </Card>
+          </button>
 
-        <section className="mt-6">
-          <SectionTitle title="Support Options" />
+          <button
+            onClick={() =>
+              setSelectedType("consultation")
+            }
+            className={`w-full rounded-xl border p-4 text-left transition ${
+              selectedType ===
+              "consultation"
+                ? "border-primary bg-primary/5"
+                : ""
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">
+                  Nutrition Consultation
+                </p>
 
-          <div className="grid gap-4 md:grid-cols-3">
-            {options.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Card key={item.title} className="focus-lift p-5">
-                  <div className="rounded-lg bg-primary/10 p-3 text-primary w-fit">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <p className="mt-4 font-semibold">{item.title}</p>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.desc}</p>
+                <p className="text-sm text-muted-foreground">
+                  Discuss goals, challenges and dietary habits.
+                </p>
+              </div>
 
-                  <Button variant={item.primary ? "default" : "outline"} className="mt-5 w-full">
-                    {item.action}
-                  </Button>
-                </Card>
-              );
-            })}
-          </div>
-        </section>
-      </div>
+              {selectedType ===
+                "consultation" && (
+                <CheckCircle2 className="h-5 w-5 text-primary" />
+              )}
+            </div>
+          </button>
+        </div>
+      </Card>
 
-      <BottomNav />
-    </main>
+      {/* Date */}
+      <Card className="p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <CalendarDays className="h-5 w-5 text-primary" />
+
+          <h2 className="font-semibold">
+            Date
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-4 gap-3">
+          <Button variant="outline">
+            Mon 15
+          </Button>
+
+          <Button variant="outline">
+            Tue 16
+          </Button>
+
+          <Button variant="default">
+            Wed 17
+          </Button>
+
+          <Button variant="outline">
+            Thu 18
+          </Button>
+        </div>
+      </Card>
+
+      {/* Time */}
+      <Card className="p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <Clock3 className="h-5 w-5 text-primary" />
+
+          <h2 className="font-semibold">
+            Available Time Slots
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          {slots.map((slot) => (
+            <Button
+              key={slot}
+              variant={
+                selectedTime === slot
+                  ? "default"
+                  : "outline"
+              }
+              onClick={() =>
+                setSelectedTime(slot)
+              }
+            >
+              {slot}
+            </Button>
+          ))}
+        </div>
+      </Card>
+
+      {/* Summary */}
+      <Card className="p-5 bg-primary/5 border-primary/20">
+        <h3 className="font-semibold mb-3">
+          Booking Summary
+        </h3>
+
+        <div className="space-y-2 text-sm">
+          <p>
+            <strong>Dietitian:</strong>{" "}
+            Dr. Sarah Perera
+          </p>
+
+          <p>
+            <strong>Session:</strong>{" "}
+            {selectedType ===
+            "followup"
+              ? "Follow-up Session"
+              : "Nutrition Consultation"}
+          </p>
+
+          <p>
+            <strong>Duration:</strong> 30
+            Minutes
+          </p>
+
+          <p>
+            <strong>Time:</strong>{" "}
+            {selectedTime}
+          </p>
+        </div>
+      </Card>
+
+      <Button
+        size="lg"
+        className="w-full"
+      >
+        Confirm Appointment
+      </Button>
+    </>
   );
 }

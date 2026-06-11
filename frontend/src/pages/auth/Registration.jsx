@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/collapsible";
 
 import { ArrowRight, ChevronDown } from "lucide-react";
-import { useUserRegister } from "../../hooks/auth.hook";
+import { useUserRegister } from "../../hooks/useAuth";
 
 const Registration = () => {
   
