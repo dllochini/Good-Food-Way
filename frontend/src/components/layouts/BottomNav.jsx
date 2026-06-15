@@ -19,7 +19,7 @@ export default function BottomNav() {
     "text-muted-foreground hover:bg-muted hover:text-foreground";
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t bg-card/95 backdrop-blur">
+    <nav className="fixed bottom-0 left-1/2 z-40 w-full max-w-md -translate-x-1/2 border-t border-border bg-card/95 backdrop-blur">
       <div className="mx-auto flex max-w-md justify-between px-3 py-2">
         <NavLink
           to="/dashboard"

@@ -1,58 +1,100 @@
-import { LogIn } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
-import AuthLayout from "@/components/layouts/AuthLayout";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 export default function Login() {
   const navigate = useNavigate();
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const existingUsers = [
+    "demo@goodfoodway.com",
+    "test@gmail.com",
+  ];
+
+  const handleContinue = () => {
+    if (!email || !password) return;
+
+    const userExists = existingUsers.includes(
+      email.toLowerCase()
+    );
+
+    if (userExists) {
+      navigate("/dashboard");
+    } else {
+      navigate("/onboarding/goals");
+    }
+  };
+
   return (
-    <AuthLayout
-      title="Welcome Back!"
-      subtitle="Continue your health journey with Good Food Way."
-      showBack={false}
-      footer={
-        <p className="text-center text-sm text-muted-foreground">
-          Don't have an account?{" "}
-          <button
-            type="button"
-            onClick={() => navigate("/register")}
-            className="font-semibold text-primary hover:underline"
-          >
-            Create One
-          </button>
-        </p>
-      }
-    >
-      <form
-        className="space-y-4"
-        onSubmit={(event) => {
-          event.preventDefault();
-          navigate("/dashboard");
-        }}
-      >
-        <div className="space-y-2">
-          <Label htmlFor="loginEmail">Email</Label>
-          <Input id="loginEmail" type="email" autoComplete="email" />
+    <main className="min-h-screen bg-background">
+      <div className="fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute left-1/2 top-0 h-80 w-80 -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
+      </div>
+      <div className="mx-auto flex min-h-screen max-w-md flex-col px-5 py-6">
+
+        <div className="flex flex-1 flex-col justify-center">
+
+          <div className="mb-8 text-center">
+
+            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-primary/10">
+              <Sparkles className="h-10 w-10 text-primary" />
+            </div>
+
+            <h1 className="text-3xl font-bold">
+              Welcome
+            </h1>
+
+            <p className="mt-2 text-muted-foreground">
+              Sign in or create an account to continue.
+            </p>
+
+            <p className="mt-4 text-center text-xs text-muted-foreground">
+              New users will set up a personalized plan in a few quick steps.
+            </p>
+          </div>
+
+          <Card className="rounded-3xl p-6">
+
+            <div className="space-y-4">
+
+              <Input
+                type="email"
+                placeholder="Email address"
+                className="h-14 rounded-2xl"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+
+              <Input
+                type="password"
+                placeholder="Password"
+                className="h-14 rounded-2xl"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+
+              <Button
+                onClick={handleContinue}
+                disabled={!email || !password}
+                className="h-14 w-full rounded-2xl"
+              >
+                Continue
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+
+            </div>
+
+          </Card>
+
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="loginPassword">Password</Label>
-          <Input
-            id="loginPassword"
-            type="password"
-            autoComplete="current-password"
-          />
-        </div>
-
-        <Button className="h-12 w-full" type="submit">
-          <LogIn className="h-4 w-4" />
-          Login
-        </Button>
-      </form>
-    </AuthLayout>
+      </div>
+    </main>
   );
 }
