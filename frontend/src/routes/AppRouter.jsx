@@ -24,6 +24,7 @@ import EditProfilePage from "@/pages/settings/EditProfilePage";
 
 import AICoachPage from "@/pages/support/AICoachPage";
 import Login from "@/pages/auth/Login";
+import Signup from "@/pages/auth/SignUp";
 
 import DietitianChatPage from "@/pages/support/DietitianChatPage";
 import LandingPage from "@/pages/auth/LandingPage";
@@ -63,6 +64,7 @@ const AppRouter = () => {
 
         <Route path="/landing" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         {/* <Route path="/onboarding" element={<OnboardingPage />} /> */}
 
         <Route element={<AppLayout />}>

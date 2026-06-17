@@ -12,23 +12,12 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const existingUsers = [
-    "demo@goodfoodway.com",
-    "test@gmail.com",
-  ];
-
-  const handleContinue = () => {
+  const handleLogin = () => {
     if (!email || !password) return;
 
-    const userExists = existingUsers.includes(
-      email.toLowerCase()
-    );
+    // TODO: Call backend login API
 
-    if (userExists) {
-      navigate("/dashboard");
-    } else {
-      navigate("/onboarding/goals");
-    }
+    navigate("/dashboard");
   };
 
   return (
@@ -36,33 +25,25 @@ export default function Login() {
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute left-1/2 top-0 h-80 w-80 -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
       </div>
+
       <div className="mx-auto flex min-h-screen max-w-md flex-col px-5 py-6">
-
         <div className="flex flex-1 flex-col justify-center">
-
           <div className="mb-8 text-center">
-
             <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-primary/10">
               <Sparkles className="h-10 w-10 text-primary" />
             </div>
 
             <h1 className="text-3xl font-bold">
-              Welcome
+              Welcome Back
             </h1>
 
             <p className="mt-2 text-muted-foreground">
-              Sign in or create an account to continue.
-            </p>
-
-            <p className="mt-4 text-center text-xs text-muted-foreground">
-              New users will set up a personalized plan in a few quick steps.
+              Sign in to continue your nutrition journey.
             </p>
           </div>
 
           <Card className="rounded-3xl p-6">
-
             <div className="space-y-4">
-
               <Input
                 type="email"
                 placeholder="Email address"
@@ -80,20 +61,26 @@ export default function Login() {
               />
 
               <Button
-                onClick={handleContinue}
+                onClick={handleLogin}
                 disabled={!email || !password}
                 className="h-14 w-full rounded-2xl"
               >
-                Continue
+                Sign In
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
 
+              <div className="pt-2 text-center text-sm text-muted-foreground">
+                Don't have an account?{" "}
+                <button
+                  onClick={() => navigate("/signup")}
+                  className="font-medium text-primary"
+                >
+                  Create one
+                </button>
+              </div>
             </div>
-
           </Card>
-
         </div>
-
       </div>
     </main>
   );
