@@ -2,21 +2,26 @@ import {
   pgTable,
   uuid,
   varchar,
-  timestamp,
   integer,
   decimal,
   text,
+  timestamp,
 } from "drizzle-orm/pg-core";
 
 import { users } from "./users.js";
 import { plans } from "./plans.js";
 
 export const profiles = pgTable("profiles", {
-  id: uuid("id").defaultRandom().primaryKey(),
+  id: uuid("id")
+    .defaultRandom()
+    .primaryKey(),
 
   userId: uuid("user_id")
-    .references(() => users.id)
-    .notNull(),
+    .references(() => users.id, {
+      onDelete: "cascade",
+    })
+    .notNull()
+    .unique(),
 
   age: integer("age"),
 
@@ -38,15 +43,17 @@ export const profiles = pgTable("profiles", {
     length: 50,
   }),
 
-  goal: varchar("goal", {
-    length: 100,
-  }),
-  
   dislikes: text("dislikes"),
-  
-  planId: uuid("plan_id").references(() => plans.id),
 
-  createdAt: timestamp("created_at").defaultNow(),
+  planId: uuid("plan_id").references(
+    () => plans.id
+  ),
 
-  updatedAt: timestamp("updated_at").defaultNow(),
+  createdAt: timestamp("created_at")
+    .defaultNow()
+    .notNull(),
+
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .notNull(),
 });

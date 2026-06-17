@@ -2,13 +2,22 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 import * as authRepo from "../repositories/auth.js";
+import { createProfile } from "../repositories/profile.js";
+import { createOnboardingProgress } from "../repositories/onboarding.js";
 
-// REGISTER
 export const register = async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
 
-    const existingUser = await authRepo.findUserByEmail(email);
+    if (!firstName || !lastName || !email || !password) {
+      return res.status(400).json({
+        message: "All fields are required",
+      });
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+
+    const existingUser = await authRepo.findUserByEmail( normalizedEmail );
 
     if (existingUser) {
       return res.status(400).json({
@@ -19,11 +28,17 @@ export const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await authRepo.createUser({
-      firstName,
-      lastName,
-      email,
-      password: hashedPassword,
-    });
+        firstName,
+        lastName,
+        email: normalizedEmail,
+        password: hashedPassword,
+      });
+
+    await createProfile(user.id);
+
+    await createOnboardingProgress(
+      user.id
+    );
 
     const token = jwt.sign(
       {
@@ -32,11 +47,14 @@ export const register = async (req, res) => {
         role: user.role,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "7d" }
+      {
+        expiresIn: "7d",
+      }
     );
 
     return res.status(201).json({
-      message: "User registered successfully",
+      message:
+        "User registered successfully",
       token,
       user: {
         id: user.id,
@@ -46,21 +64,27 @@ export const register = async (req, res) => {
         role: user.role,
       },
     });
-
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Registration failed" });
+
+    return res.status(500).json({
+      message: "Registration failed",
+    });
   }
 };
 
-
-
-// LOGIN
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } =
+      req.body;
 
-    const user = await authRepo.findUserByEmail(email);
+    const normalizedEmail =
+      email.toLowerCase().trim();
+
+    const user =
+      await authRepo.findUserByEmail(
+        normalizedEmail
+      );
 
     if (!user) {
       return res.status(400).json({
@@ -68,7 +92,11 @@ export const login = async (req, res) => {
       });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch =
+      await bcrypt.compare(
+        password,
+        user.password
+      );
 
     if (!isMatch) {
       return res.status(400).json({
@@ -83,7 +111,9 @@ export const login = async (req, res) => {
         role: user.role,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "7d" }
+      {
+        expiresIn: "7d",
+      }
     );
 
     return res.status(200).json({
@@ -97,9 +127,46 @@ export const login = async (req, res) => {
         role: user.role,
       },
     });
-
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Login failed" });
+
+    return res.status(500).json({
+      message: "Login failed",
+    });
+  }
+};
+
+export const getCurrentUser = async (
+  req,
+  res
+) => {
+  try {
+    const user =
+      await authRepo.findUserById(
+        req.user.id
+      );
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    return res.json({
+      user: {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      message:
+        "Failed to fetch user",
+    });
   }
 };

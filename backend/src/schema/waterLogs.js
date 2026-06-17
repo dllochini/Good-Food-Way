@@ -1,15 +1,14 @@
 import {
   pgTable,
   uuid,
-  decimal,
-  date,
+  integer,
   timestamp,
 } from "drizzle-orm/pg-core";
 
 import { users } from "./users.js";
 
-export const weightLogs = pgTable(
-  "weight_logs",
+export const waterLogs = pgTable(
+  "water_logs",
   {
     id: uuid("id")
       .defaultRandom()
@@ -21,13 +20,8 @@ export const weightLogs = pgTable(
       })
       .notNull(),
 
-    weight: decimal("weight", {
-      precision: 5,
-      scale: 2,
-    }).notNull(),
-
-    recordedDate: date(
-      "recorded_date"
+    amountMl: integer(
+      "amount_ml"
     ).notNull(),
 
     createdAt: timestamp(
