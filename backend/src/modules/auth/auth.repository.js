@@ -1,6 +1,6 @@
-import { db } from "../config/db.js";
+import { db } from "../../config/db.js";
 import { eq } from "drizzle-orm";
-import { users } from "../schema/users.js";
+import { users } from "../../db/schema/users.js";
 
 export const findUserByEmail = async (email) => {
   const result = await db
@@ -28,3 +28,4 @@ export const createUser = async (userData) => {
 
   return user;
 };
+

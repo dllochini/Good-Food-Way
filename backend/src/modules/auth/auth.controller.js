@@ -1,9 +1,13 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import * as authRepo from "./auth.repository.js";
+import { createOnboardingProgress } from "../onboarding/onboarding.repository.js";
+import { profiles } from "../../db/schema/profiles.js";
 
-import * as authRepo from "../repositories/auth.js";
-import { createProfile } from "../repositories/profile.js";
-import { createOnboardingProgress } from "../repositories/onboarding.js";
+export const createProfile = async (userId) => {
+  const [profile] = await db.insert(profiles).values({ userId }).returning();
+  return profile;
+};
 
 export const register = async (req, res) => {
   try {
@@ -17,7 +21,7 @@ export const register = async (req, res) => {
 
     const normalizedEmail = email.toLowerCase().trim();
 
-    const existingUser = await authRepo.findUserByEmail( normalizedEmail );
+    const existingUser = await authRepo.findUserByEmail(normalizedEmail);
 
     if (existingUser) {
       return res.status(400).json({
@@ -28,17 +32,15 @@ export const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await authRepo.createUser({
-        firstName,
-        lastName,
-        email: normalizedEmail,
-        password: hashedPassword,
-      });
+      firstName,
+      lastName,
+      email: normalizedEmail,
+      passwordHash: hashedPassword,
+    });
 
     await createProfile(user.id);
 
-    await createOnboardingProgress(
-      user.id
-    );
+    await createOnboardingProgress(user.id);
 
     const token = jwt.sign(
       {
@@ -49,12 +51,11 @@ export const register = async (req, res) => {
       process.env.JWT_SECRET,
       {
         expiresIn: "7d",
-      }
+      },
     );
 
     return res.status(201).json({
-      message:
-        "User registered successfully",
+      message: "User registered successfully",
       token,
       user: {
         id: user.id,
@@ -75,16 +76,11 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { email, password } =
-      req.body;
+    const { email, password } = req.body;
 
-    const normalizedEmail =
-      email.toLowerCase().trim();
+    const normalizedEmail = email.toLowerCase().trim();
 
-    const user =
-      await authRepo.findUserByEmail(
-        normalizedEmail
-      );
+    const user = await authRepo.findUserByEmail(normalizedEmail);
 
     if (!user) {
       return res.status(400).json({
@@ -92,11 +88,7 @@ export const login = async (req, res) => {
       });
     }
 
-    const isMatch =
-      await bcrypt.compare(
-        password,
-        user.password
-      );
+    const isMatch = await bcrypt.compare(password, user.passwordHash);
 
     if (!isMatch) {
       return res.status(400).json({
@@ -113,7 +105,7 @@ export const login = async (req, res) => {
       process.env.JWT_SECRET,
       {
         expiresIn: "7d",
-      }
+      },
     );
 
     return res.status(200).json({
@@ -136,15 +128,9 @@ export const login = async (req, res) => {
   }
 };
 
-export const getCurrentUser = async (
-  req,
-  res
-) => {
+export const getCurrentUser = async (req, res) => {
   try {
-    const user =
-      await authRepo.findUserById(
-        req.user.id
-      );
+    const user = await authRepo.findUserById(req.user.id);
 
     if (!user) {
       return res.status(404).json({
@@ -165,8 +151,7 @@ export const getCurrentUser = async (
     console.error(error);
 
     return res.status(500).json({
-      message:
-        "Failed to fetch user",
+      message: "Failed to fetch user",
     });
   }
 };

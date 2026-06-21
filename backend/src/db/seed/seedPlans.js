@@ -1,4 +1,4 @@
-import { db } from "../config/db.js";
+import { db } from "../../config/db.js";
 import { plans } from "../schema/plans.js";
 
 await db.insert(plans).values([
