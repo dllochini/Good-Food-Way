@@ -2,6 +2,4 @@
 @import "tw-animate-css";
 @import "@fontsource-variable/geist";
 
-/* @import "./styles/neutralTheme.css";   */
-
-@import "./styles/theme.css";  
+@import "@/shared/styles/theme.css";  

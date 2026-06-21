@@ -1,6 +1,6 @@
 import "./App.css";
-import MobileShell from "./components/layouts/MobileShell";
-import AppRouter from "./routes/AppRouter";
+import MobileShell from "./app/layouts/MobileShell";
+import AppRouter from "./app/router/AppRouter";
 
 function App() {
   return (
